@@ -9,8 +9,6 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-    console.log(action);
-
     switch (action.type) {
         case NFC_SCAN_STARTED:
             return { ...state, isNfcScanning: 'true' };
