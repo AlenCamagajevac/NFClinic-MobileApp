@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
+import NfcReducer from './NfcReducer';
 
 export default combineReducers({
-    auth: () => []
+    nfc: NfcReducer
 });
