@@ -1,9 +1,14 @@
 import React from 'react';
-import { Router } from 'react-native-router-flux';
+import { Scene, Router } from 'react-native-router-flux';
+import PatientProfileForm from './forms/PatientProfileForm';
 
 const RouterComponent = () => {
     return (
-        <Router />
+        <Router>
+            <Scene key="profileForm" inital hideNavBar="true">
+                <Scene key="patientProfileForm" component={PatientProfileForm} />
+            </Scene>
+        </Router>
     );
 };
 
