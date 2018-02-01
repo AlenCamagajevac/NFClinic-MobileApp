@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Container, Header, Left, Body, 
     Button, Icon, Title, Footer, FooterTab, Text, Tab, Tabs } from 'native-base';
 import { connect } from 'react-redux';
+import { Actions } from 'react-native-router-flux';
 import PatientProfileTab from './PatientProfileTab';
 import PatientTimelineTab from './PatientTimelineTab';
 import { nfcScanStarted } from '../actions';
@@ -9,6 +10,10 @@ import { nfcScanStarted } from '../actions';
 class PatientProfileForm extends Component {
     onNfcScanStart() {
         this.props.nfcScanStarted();
+    }
+
+    onPatientAddClick() {
+        Actions.newPatientForm();
     }
     
     render() {
@@ -34,7 +39,7 @@ class PatientProfileForm extends Component {
 
                 <Footer>
                     <FooterTab>
-                        <Button vertical>
+                        <Button vertical onPress={() => this.onPatientAddClick()}>
                             <Icon name="md-add" />
                             <Text>Add patient</Text>
                         </Button>

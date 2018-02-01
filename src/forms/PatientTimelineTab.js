@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ListView, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import { ListItem, Icon, Left, Body, Right, Fab } from 'native-base';
+import { Actions } from 'react-native-router-flux';
 import { nfcScanStarted } from '../actions';
 
 const data = [
@@ -22,6 +23,10 @@ class PatientTimelineTab extends Component {
          });
 
         this.dataSource = ds.cloneWithRows(data);
+    }
+
+    onNewTimelineEventClick() {
+        Actions.newTimelineEventForm();
     }
 
     renderRow(dataItem) {
@@ -53,6 +58,7 @@ class PatientTimelineTab extends Component {
                 <Fab 
                     style={{ backgroundColor: '#5067FF' }} 
                     position="bottomRight"
+                    onPress={() => this.onNewTimelineEventClick()}
                 >
                     <Icon name="md-folder-open" />
                 </Fab>
