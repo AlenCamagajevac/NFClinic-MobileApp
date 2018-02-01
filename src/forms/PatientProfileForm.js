@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Container, Header, Left, Body, Right, 
-    Button, Icon, Title, Footer, FooterTab, Text, Content } from 'native-base';
+import { Container, Header, Left, Body, 
+    Button, Icon, Title, Footer, FooterTab, Text, Tab, Tabs } from 'native-base';
 import { connect } from 'react-redux';
+import PatientProfileTab from './PatientProfileTab';
+import PatientTimelineTab from './PatientTimelineTab';
 import { nfcScanStarted } from '../actions';
 
 class PatientProfileForm extends Component {
@@ -12,25 +14,23 @@ class PatientProfileForm extends Component {
     render() {
         return (
             <Container>
-                <Header>
+                <Header hasTabs>
                     <Left>
-                        <Button transparent>
-                        <Icon name='arrow-back' />
-                        </Button>
+                        <Icon name='md-clipboard' />
                     </Left>
                     <Body>
-                        <Title>Header</Title>
+                        <Title>Main menu</Title>
                     </Body>
-                    <Right>
-                        <Button transparent>
-                        <Icon name='menu' />
-                        </Button>
-                    </Right>
                 </Header>
 
-                <Content>
-                    <Text>{this.props.isNfcScanning}</Text>
-                </Content>
+                <Tabs initialPage={0}>
+                    <Tab heading="Patient Profile">
+                        <PatientProfileTab />
+                    </Tab>
+                    <Tab heading="Timeline">
+                        <PatientTimelineTab />
+                    </Tab>
+                </Tabs>
 
                 <Footer>
                     <FooterTab>
@@ -41,10 +41,6 @@ class PatientProfileForm extends Component {
                         <Button vertical onPress={() => this.onNfcScanStart()}>
                             <Icon name="md-wifi" />
                             <Text>Start scan</Text>
-                        </Button>
-                        <Button vertical active>
-                            <Icon active name="md-folder-open" />
-                            <Text>Add record</Text>
                         </Button>
                     </FooterTab>
                 </Footer>
