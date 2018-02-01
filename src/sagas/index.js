@@ -1,9 +1,11 @@
 import { all } from 'redux-saga/effects';
 
-import { nfcSaga } from './NfcSaga';
+import { nfcSagas } from './NfcSaga';
 
 export default function* rootSaga() {
-  yield all([
-    nfcSaga,
-  ]);
+	console.log('into root saga');
+
+	yield all([
+		nfcSagas()
+	]);
 }

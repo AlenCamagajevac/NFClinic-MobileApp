@@ -6,14 +6,7 @@ import { nfcScanStarted } from '../actions';
 
 class PatientProfileForm extends Component {
     onNfcScanStart() {
-        console.log('action');
         this.props.nfcScanStarted();
-    }
-
-    renderScann() {
-        if (this.props.isNfcScanning === 'true') {
-            return <Text>I am scanning</Text>;
-        }
     }
     
     render() {
@@ -61,9 +54,9 @@ class PatientProfileForm extends Component {
 }
 
 const mapStateToProps = ({ nfc }) => {
-    const { isNfcScanning } = nfc;
+    const { isNfcScanning, nfcTag, nfcScanError } = nfc;
 
-    return { isNfcScanning };
+    return { isNfcScanning, nfcTag, nfcScanError };
 };
 
 export default connect(mapStateToProps, { nfcScanStarted })(PatientProfileForm);
