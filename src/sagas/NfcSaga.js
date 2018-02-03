@@ -2,7 +2,8 @@ import { put, takeLatest, all, call } from 'redux-saga/effects';
 import NfcManager from 'react-native-nfc-manager';
 import { Actions } from 'react-native-router-flux';
 
-import { NFC_SCAN_STARTED, NFC_SCAN_FAIL, NFC_SCAN_SUCCESS, NFC_SCAN_ABORTED } from '../actions/types';
+import { NFC_SCAN_STARTED, NFC_SCAN_FAIL, 
+    NFC_SCAN_SUCCESS, NFC_SCAN_ABORTED, PATIENT_GET_BEGIN } from '../actions/types';
 
 
 function* NfcScanStarted() {
@@ -10,6 +11,7 @@ function* NfcScanStarted() {
         Actions.nfcScanForm();
         const nfcTag = yield call(NfcWaitForTag);
         yield put({ type: NFC_SCAN_SUCCESS, payload: nfcTag.id });
+        yield put({ type: PATIENT_GET_BEGIN, payload: nfcTag.id });
     } catch (error) {
         yield put({ type: NFC_SCAN_FAIL, payload: error });
     }
@@ -18,8 +20,8 @@ function* NfcScanStarted() {
 const NfcWaitForTag = () => {
     return new Promise(resolve => {
         NfcManager.registerTagEvent(tag => {
-            NfcManager.unregisterTagEvent();
             Actions.patientProfileForm();
+            NfcManager.unregisterTagEvent();         
             resolve(tag);
         });
       });

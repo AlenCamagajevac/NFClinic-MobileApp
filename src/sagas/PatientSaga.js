@@ -1,13 +1,27 @@
 import { put, takeLatest, all, call } from 'redux-saga/effects';
-import NfcManager from 'react-native-nfc-manager';
-import { Actions } from 'react-native-router-flux';
+import axios from 'axios';
 
-import { PATIENT_ADD_BEGIN, PATIENT_ADD_ABORT } from '../actions/types';
+import { PATIENT_GET_BEGIN, PATIENT_GET_FAIL, PATIENT_GET_SUCCESS } from '../actions/types';
+
+function* patientFetchStarted(action) {
+        try {
+                console.log('patient add started', action.payload);
+                const patient = yield call(fetchPatientData, action.payload);
+                yield put({ type: PATIENT_GET_SUCCESS, payload: patient });
+        } catch (error) {
+                yield put({ type: PATIENT_GET_FAIL, payload: error.response.status });
+        }
+}
+
+const fetchPatientData = (cardId) => {
+        return axios.get(`http://192.168.5.10:56732/api/patients/card/${cardId}`).then(response => {
+                return response.data;
+        });          
+};
 
 // Bootstrap Functions App
-export function* nfcSagas() {
+export function* patientSagas() {
 	yield all([
-        yield takeLatest(PATIENT_ADD_BEGIN, PatientAddStarted),
-        yield takeLatest(PATIENT_ADD_ABORT, PatientAddAborted)
+        yield takeLatest(PATIENT_GET_BEGIN, patientFetchStarted),
 	]);	
 }

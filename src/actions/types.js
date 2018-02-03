@@ -8,7 +8,15 @@ export const PATIENT_ADD_SUCCESS = 'patient_add_success';
 export const PATIENT_ADD_FAIL = 'patient_add_fail';
 export const PATIENT_ADD_ABORT = 'patient_add_abort';
 
+export const PATIENT_GET_BEGIN = 'patient_get_begin';
+export const PATIENT_GET_SUCCESS = 'patient_get_success';
+export const PATIENT_GET_FAIL = 'patient_get_fail';
+
 export const TIMELINE_EVENT_ADD_BEGIN = 'timeline_event_add_begin';
 export const TIMELINE_EVENT_ADD_SUCCESS = 'timeline_event_add_success';
 export const TIMELINE_EVENT_ADD_FAIL = 'timeline_event_add_fail';
 export const TIMELINE_EVENT_ADD_ABORT = 'timeline_event_add_abort';
+
+export const TIMELINE_EVENT_GET_BEGIN = 'timeline_event_get_begin';
+export const TIMELINE_EVENT_GET_SUCCESS = 'timeline_event_get_success';
+export const TIMELINE_EVENT_GET_FAIL = 'timeline_event_get_fail';
