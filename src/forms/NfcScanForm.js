@@ -35,7 +35,7 @@ class NfcScanForm extends Component {
         if (this.props.isNfcScanning === 'true') {
             return (
                 <View style={{ paddingTop: 150, justifyContent: 'center', alignItems: 'center' }}>
-                    <Icon active name="md-wifi" />
+                    <Icon active name="md-card" />
                     <Text>Move nfc tag to sensor</Text>
                 </View>
             );

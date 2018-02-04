@@ -11,7 +11,8 @@ function* NfcScanStarted() {
         Actions.nfcScanForm();
         const nfcTag = yield call(NfcWaitForTag);
         yield put({ type: NFC_SCAN_SUCCESS, payload: nfcTag.id });
-        yield put({ type: PATIENT_GET_BEGIN, payload: nfcTag.id });   
+        yield put({ type: PATIENT_GET_BEGIN, payload: nfcTag.id });
+        Actions.patientProfileForm();   
     } catch (error) {
         yield put({ type: NFC_SCAN_FAIL, payload: error });
     }
@@ -20,7 +21,6 @@ function* NfcScanStarted() {
 const NfcWaitForTag = () => {
     return new Promise(resolve => {
         NfcManager.registerTagEvent(tag => {
-            Actions.patientProfileForm();
             NfcManager.unregisterTagEvent();         
             resolve(tag);
         });

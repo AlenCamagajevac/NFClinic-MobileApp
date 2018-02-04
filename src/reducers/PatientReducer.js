@@ -17,9 +17,9 @@ export default (state = INITIAL_STATE, action) => {
         case PATIENT_GET_BEGIN:
             return { ...state, isPatientLoading: true, patientGetError: '' };
         case PATIENT_GET_SUCCESS:
-            return { ...state, patientModel: action.payload, isPatientLoading: false, patientGetError: '' };
+            return { ...state, patientModel: action.payload, isPatientLoading: false, patientGetError: '', patientTimeline: [] };
         case PATIENT_GET_FAIL:
-            return { ...state, isPatientLoading: false, patientGetError: action.payload };
+            return { ...state, patientModel: null, isPatientLoading: false, patientGetError: action.payload, patientTimeline: [], timelineGetError: action.payload };
         case TIMELINE_EVENT_GET_BEGIN:
             return { ...state, isTimelineLoading: true, timelineGetError: '' };
         case TIMELINE_EVENT_GET_SUCCESS:

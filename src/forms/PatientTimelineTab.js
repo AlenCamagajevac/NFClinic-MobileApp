@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { ListView, Text, View } from 'react-native';
+import { ListView, View } from 'react-native';
 import { connect } from 'react-redux';
-import { ListItem, Icon, Left, Body, Right, Fab, Spinner, Container } from 'native-base';
+import { ListItem, Icon, Left, Body, Right, Fab, Spinner, Container, Text } from 'native-base';
 import { Actions } from 'react-native-router-flux';
+import Moment from 'moment';
 import { timelineEventFetchStarted } from '../actions';
 
 class PatientTimelineTab extends Component {
@@ -10,7 +11,7 @@ class PatientTimelineTab extends Component {
         super(props);
         const ds = this.getDatasource();
         this.state = {
-            dataSource: ds.cloneWithRows([{}]),
+            dataSource: ds.cloneWithRows([]),
         };
     }
 
@@ -19,8 +20,7 @@ class PatientTimelineTab extends Component {
             dataSource: this.getDatasource().cloneWithRows(this.props.patientTimeline) 
         });
 
-        if (this.props.patientModel !== null) {
-            console.log('start');
+        if (this.props.patientTimeline.length === 0 && this.props.patientModel !== null) {
             this.props.timelineEventFetchStarted(this.props.patientModel.id);
         }
     }
@@ -40,17 +40,19 @@ class PatientTimelineTab extends Component {
     }
 
     renderRow(timelineItem) {
+        Moment.locale('hr');
         return (
             <ListItem avatar>
                 <Left>
-                    <Icon name="md-arrow-round-forward" />
+                    <Icon name="md-clipboard" />
                 </Left>
                 <Body>
                     <Text>{timelineItem.name}</Text>
                     <Text note>{timelineItem.description}</Text>
                 </Body>
                 <Right style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <Text note>{timelineItem.time}</Text>
+                    <Text note>{Moment(timelineItem.time).format('DD.MM.YYYY')}</Text>
+                    <Text note>{Moment(timelineItem.time).format('HH:mm')}</Text>
                 </Right>
             </ListItem>
         );

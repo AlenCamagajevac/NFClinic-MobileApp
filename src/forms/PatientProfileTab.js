@@ -11,9 +11,7 @@ class PatientProfileTab extends Component {
     }
     
     render() {
-        if (this.props.patientModel === null) {
-            return <Spinner />;
-        } else if (this.props.isPatientLoading) {
+        if (this.props.isPatientLoading) {
             return <Spinner />;
         } else if (this.props.patientGetError !== '') {
             return (
