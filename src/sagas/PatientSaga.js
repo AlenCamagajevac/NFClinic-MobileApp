@@ -3,7 +3,11 @@ import axios from 'axios';
 
 import { PATIENT_GET_BEGIN, PATIENT_GET_FAIL, PATIENT_GET_SUCCESS, 
         TIMELINE_EVENT_GET_BEGIN, TIMELINE_EVENT_GET_SUCCESS, 
-        TIMELINE_EVENT_GET_FAIL } from '../actions/types';
+        TIMELINE_EVENT_GET_FAIL, 
+        TIMELINE_EVENT_ADD_BEGIN,
+        TIMELINE_EVENT_ADD_SUCCESS,
+        TIMELINE_EVENT_ADD_FAIL
+} from '../actions/types';
 
 function* patientFetchStarted(action) {
         try {
@@ -23,6 +27,15 @@ function* timelineEventFetchStarted(action) {
         }
 }
 
+function* timelineEventPostStarted(action) {
+        try {
+                const createdEvent = yield call(postEvent, action.payload);
+                yield put({ type: TIMELINE_EVENT_ADD_SUCCESS, payload: createdEvent });
+        } catch (error) {
+                yield put({ type: TIMELINE_EVENT_ADD_FAIL, payload: error.response.status });
+        }
+}
+
 const fetchPatientData = (cardId) => {
         return axios.get(`http://192.168.5.10:56732/api/patients/card/${cardId}`).then(response => {
                 return response.data;
@@ -35,10 +48,20 @@ const fetchPatientTimeline = (patientId) => {
         });
 };
 
+const postEvent = (eventData) => {
+        console.log('eventdata', eventData);
+        return axios.post(`http://192.168.5.10:56732/api/patients/${eventData.id}/Timeline/Event`, {
+                time: eventData.time,
+                description: eventData.description,
+                name: eventData.title
+                });
+};
+
 // Bootstrap Functions App
 export function* patientSagas() {
 	yield all([
         yield takeLatest(PATIENT_GET_BEGIN, patientFetchStarted),
-        yield takeLatest(TIMELINE_EVENT_GET_BEGIN, timelineEventFetchStarted)
+        yield takeLatest(TIMELINE_EVENT_GET_BEGIN, timelineEventFetchStarted),
+        yield takeLatest(TIMELINE_EVENT_ADD_BEGIN, timelineEventPostStarted)
 	]);	
 }

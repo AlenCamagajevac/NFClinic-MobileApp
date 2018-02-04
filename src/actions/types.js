@@ -12,6 +12,8 @@ export const PATIENT_GET_BEGIN = 'patient_get_begin';
 export const PATIENT_GET_SUCCESS = 'patient_get_success';
 export const PATIENT_GET_FAIL = 'patient_get_fail';
 
+export const TIMELINE_EVENT_FORM_UPDATE = 'timeline_event_form_update';
+
 export const TIMELINE_EVENT_ADD_BEGIN = 'timeline_event_add_begin';
 export const TIMELINE_EVENT_ADD_SUCCESS = 'timeline_event_add_success';
 export const TIMELINE_EVENT_ADD_FAIL = 'timeline_event_add_fail';

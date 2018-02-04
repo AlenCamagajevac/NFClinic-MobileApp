@@ -8,7 +8,7 @@ import NewTimelineEventForm from './forms/NewTimelineEventForm';
 const RouterComponent = () => {
     return (
         <Router>
-            <Scene key="profileForm" inital hideNavBar="true">
+            <Scene key="profileForm" hideNavBar="true">
                 <Scene key="nfcScanForm" component={NfcScanForm} />
                 <Scene key="newPatientForm" component={NewPatientForm} />  
                 <Scene key="patientProfileForm" component={PatientProfileForm} />  

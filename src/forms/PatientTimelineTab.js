@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { ListView, View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { connect } from 'react-redux';
-import { ListItem, Icon, Left, Body, Right, Fab, Spinner, Container, Text } from 'native-base';
+import { ListItem, Icon, Left, Body, Right, Fab, Spinner, Container, Text, List } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import Moment from 'moment';
 import { timelineEventFetchStarted } from '../actions';
@@ -9,15 +9,14 @@ import { timelineEventFetchStarted } from '../actions';
 class PatientTimelineTab extends Component {
     constructor(props) {
         super(props);
-        const ds = this.getDatasource();
         this.state = {
-            dataSource: ds.cloneWithRows([]),
+            dataSource: [],
         };
     }
 
     componentWillMount() {
         this.setState({ 
-            dataSource: this.getDatasource().cloneWithRows(this.props.patientTimeline) 
+            dataSource: this.props.patientTimeline
         });
 
         if (this.props.patientTimeline.length === 0 && this.props.patientModel !== null) {
@@ -26,8 +25,9 @@ class PatientTimelineTab extends Component {
     }
 
     componentWillReceiveProps(newProps) {
+        console.log(newProps.patientTimeline);
         this.setState({ 
-            dataSource: this.getDatasource().cloneWithRows(newProps.patientTimeline) 
+            dataSource: newProps.patientTimeline
         });
     }
 
@@ -35,12 +35,10 @@ class PatientTimelineTab extends Component {
         Actions.newTimelineEventForm();
     }
 
-    getDatasource() {
-        return new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    }
+    keyExtractor = (item, index) => item.id;
 
     renderRow(timelineItem) {
-        Moment.locale('hr');
+        console.log('timeline', timelineItem);
         return (
             <ListItem avatar>
                 <Left>
@@ -59,6 +57,7 @@ class PatientTimelineTab extends Component {
     }
 
     render() {
+        Moment.locale('hr');
         if (this.props.isTimelineLoading) {
             return <Spinner />;
         } else if (this.props.timelineGetError !== '') {
@@ -71,11 +70,26 @@ class PatientTimelineTab extends Component {
         }
 
         return (
-            <Container>
-                <ListView
-                    style={{ padding: 15 }}
-                    dataSource={this.state.dataSource}
-                    renderRow={this.renderRow}
+            <Container style={{ paddingBottom: 20 }}>
+                <FlatList
+                    data={this.state.dataSource}
+                    renderItem={({ item }) => (
+                        <ListItem avatar>
+                            <Left>
+                                <Icon name="md-clipboard" />
+                            </Left>
+                            <Body>
+                                <Text>{item.name}</Text>
+                                <Text note>{item.description}</Text>
+                            </Body>
+                            <Right style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                <Text note>{Moment(item.time).format('DD.MM.YYYY')}</Text>
+                                <Text note>{Moment(item.time).format('HH:mm')}</Text>
+                            </Right>
+                        </ListItem>
+                    )}
+
+                    keyExtractor={this.keyExtractor}
                 />
 
                 <Fab 
