@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FlatList, View } from 'react-native';
 import { connect } from 'react-redux';
-import { ListItem, Icon, Left, Body, Right, Fab, Spinner, Container, Text, List } from 'native-base';
+import { ListItem, Icon, Left, Body, Right, Fab, Spinner, Container, Text, Header, Item, Input, Footer } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import Moment from 'moment';
 import { timelineEventFetchStarted } from '../actions';
@@ -25,7 +25,6 @@ class PatientTimelineTab extends Component {
     }
 
     componentWillReceiveProps(newProps) {
-        console.log(newProps.patientTimeline);
         this.setState({ 
             dataSource: newProps.patientTimeline
         });
@@ -36,25 +35,6 @@ class PatientTimelineTab extends Component {
     }
 
     keyExtractor = (item, index) => item.id;
-
-    renderRow(timelineItem) {
-        console.log('timeline', timelineItem);
-        return (
-            <ListItem avatar>
-                <Left>
-                    <Icon name="md-clipboard" />
-                </Left>
-                <Body>
-                    <Text>{timelineItem.name}</Text>
-                    <Text note>{timelineItem.description}</Text>
-                </Body>
-                <Right style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <Text note>{Moment(timelineItem.time).format('DD.MM.YYYY')}</Text>
-                    <Text note>{Moment(timelineItem.time).format('HH:mm')}</Text>
-                </Right>
-            </ListItem>
-        );
-    }
 
     render() {
         Moment.locale('hr');
@@ -70,7 +50,7 @@ class PatientTimelineTab extends Component {
         }
 
         return (
-            <Container style={{ paddingBottom: 20 }}>
+            <Container style={{ paddingBottom: 5 }}>
                 <FlatList
                     data={this.state.dataSource}
                     renderItem={({ item }) => (
@@ -88,7 +68,17 @@ class PatientTimelineTab extends Component {
                             </Right>
                         </ListItem>
                     )}
-
+                    ListHeaderComponent={() => {
+                        return (
+                        <Header searchBar rounded>
+                            <Item>
+                                <Icon name="ios-search" />
+                                <Input placeholder="Search events" />
+                                <Icon name="md-clipboard" />
+                            </Item>
+                        </Header>
+                        );
+                    }}
                     keyExtractor={this.keyExtractor}
                 />
 
@@ -105,6 +95,7 @@ class PatientTimelineTab extends Component {
 }
 
 const mapStateToProps = ({ patient }) => {
+    console.log('props', patient);
     const { patientModel,
         patientTimeline,
         isTimelineLoading,

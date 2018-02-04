@@ -1,5 +1,5 @@
 import { PATIENT_GET_BEGIN, PATIENT_GET_SUCCESS, PATIENT_GET_FAIL,
-    TIMELINE_EVENT_GET_BEGIN, TIMELINE_EVENT_GET_SUCCESS, TIMELINE_EVENT_GET_FAIL } from '../actions/types';
+    TIMELINE_EVENT_GET_BEGIN, TIMELINE_EVENT_GET_SUCCESS, TIMELINE_EVENT_GET_FAIL, TIMELINE_EVENT_ADD_SUCCESS } from '../actions/types';
 
 const INITIAL_STATE = { 
     patientModel: null,
@@ -24,6 +24,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, patientTimeline: action.payload, isTimelineLoading: false, timelineGetError: '' };
         case TIMELINE_EVENT_GET_FAIL:
             return { ...state, isTimelineLoading: false, timelineGetError: action.payload };
+        case TIMELINE_EVENT_ADD_SUCCESS:
+            return { ...state, patientTimeline: [...state.patientTimeline, action.payload] };
         default:
             return state;
     }

@@ -1,4 +1,5 @@
 import { put, takeLatest, all, call } from 'redux-saga/effects';
+import { Actions } from 'react-native-router-flux';
 import axios from 'axios';
 
 import { PATIENT_GET_BEGIN, PATIENT_GET_FAIL, PATIENT_GET_SUCCESS, 
@@ -31,6 +32,7 @@ function* timelineEventPostStarted(action) {
         try {
                 const createdEvent = yield call(postEvent, action.payload);
                 yield put({ type: TIMELINE_EVENT_ADD_SUCCESS, payload: createdEvent });
+                Actions.patientProfileForm();
         } catch (error) {
                 yield put({ type: TIMELINE_EVENT_ADD_FAIL, payload: error.response.status });
         }
@@ -49,11 +51,12 @@ const fetchPatientTimeline = (patientId) => {
 };
 
 const postEvent = (eventData) => {
-        console.log('eventdata', eventData);
         return axios.post(`http://192.168.5.10:56732/api/patients/${eventData.id}/Timeline/Event`, {
-                time: eventData.time,
+                time: eventData.datetime,
                 description: eventData.description,
                 name: eventData.title
+                }).then(response => {
+                        return response.data;
                 });
 };
 

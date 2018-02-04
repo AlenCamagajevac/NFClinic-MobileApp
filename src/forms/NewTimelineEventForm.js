@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Container, Header, Left, 
     Button, Icon, Title, Footer, FooterTab, Text, Input, 
     Label, Form, Item, Content, Body } from 'native-base';
-import { View } from 'react-native';
+import { View, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import DateTimePicker from 'react-native-modal-datetime-picker';
@@ -33,7 +33,8 @@ class NewTimelineEventForm extends Component {
     onEventCreateStartClick() {
         const { datetime, title, description, patientModel } = this.props;
         const { id } = patientModel;
-        this.props.eventCreateStart({ id, datetime: Moment(datetime).format('YYYY-MM-DDTHH:mm:DD:00'), title, description });
+        this.props.eventCreateStart({ id, datetime: Moment(datetime).format('YYYY-MM-DDTHH:mm:00'), title, description });
+        Keyboard.dismiss();
     }
 
     handleDatePicked(date) {
