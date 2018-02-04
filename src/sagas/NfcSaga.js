@@ -11,7 +11,7 @@ function* NfcScanStarted() {
         Actions.nfcScanForm();
         const nfcTag = yield call(NfcWaitForTag);
         yield put({ type: NFC_SCAN_SUCCESS, payload: nfcTag.id });
-        yield put({ type: PATIENT_GET_BEGIN, payload: nfcTag.id });
+        yield put({ type: PATIENT_GET_BEGIN, payload: nfcTag.id });   
     } catch (error) {
         yield put({ type: NFC_SCAN_FAIL, payload: error });
     }

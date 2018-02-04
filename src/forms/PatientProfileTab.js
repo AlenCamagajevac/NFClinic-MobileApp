@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Container, Left, List, ListItem, Body, Separator, Icon, Text, Content } from 'native-base';
+import { View } from 'react-native';
+import { Container, Left, List, ListItem, Body, Separator, 
+    Icon, Text, Content, Spinner } from 'native-base';
 import { connect } from 'react-redux';
 import { nfcScanStarted } from '../actions';
 
@@ -9,6 +11,18 @@ class PatientProfileTab extends Component {
     }
     
     render() {
+        if (this.props.patientModel === null) {
+            return <Spinner />;
+        } else if (this.props.isPatientLoading) {
+            return <Spinner />;
+        } else if (this.props.patientGetError !== '') {
+            return (
+                <View style={{ paddingTop: 150, justifyContent: 'center', alignItems: 'center' }}>
+                    <Icon active name="md-close-circle" />
+                    <Text>Please scan another card</Text>
+                </View>
+            );
+        }
         return (
             <Container>
                 <Content>
@@ -22,7 +36,7 @@ class PatientProfileTab extends Component {
                             </Left>
                             <Body>
                                 <Text>Name</Text>
-                                <Text note>Alen Camagajevac</Text>
+                                <Text note>{this.props.patientModel.name}</Text>
                             </Body>
                         </ListItem>
                         <ListItem avatar>
@@ -31,16 +45,7 @@ class PatientProfileTab extends Component {
                             </Left>
                             <Body>
                                 <Text>Date of birth</Text>
-                                <Text note>13.02.1995</Text>
-                            </Body>
-                        </ListItem>
-                        <ListItem avatar>
-                            <Left>
-                                <Icon name="md-man" />
-                            </Left>
-                            <Body>
-                                <Text>Height</Text>
-                                <Text note>186cm</Text>
+                                <Text note>{this.props.patientModel.dateOfBirth}</Text>
                             </Body>
                         </ListItem>
                         <Separator bordered>
@@ -52,7 +57,7 @@ class PatientProfileTab extends Component {
                             </Left>
                             <Body>
                                 <Text>Phone number</Text>
-                                <Text note>031/1234 56 78</Text>
+                                <Text note>{this.props.patientModel.address}</Text>
                             </Body>
                         </ListItem>
                         <ListItem avatar>
@@ -61,7 +66,7 @@ class PatientProfileTab extends Component {
                             </Left>
                             <Body>
                                 <Text>EMail</Text>
-                                <Text note>alen.camagajevac@gmail.com</Text>
+                                <Text note>{this.props.patientModel.email}</Text>
                             </Body>
                         </ListItem>
                     </List>
@@ -71,10 +76,18 @@ class PatientProfileTab extends Component {
     }
 }
 
-const mapStateToProps = ({ nfc }) => {
-    const { isNfcScanning, nfcTag, nfcScanError } = nfc;
+const mapStateToProps = ({ patient }) => {
+    const { 
+        patientModel, 
+        patientGetError, 
+        isPatientLoading, 
+    } = patient;
 
-    return { isNfcScanning, nfcTag, nfcScanError };
+    return {  
+        patientModel,
+        patientGetError, 
+        isPatientLoading, 
+    };
 };
 
 export default connect(mapStateToProps, { nfcScanStarted })(PatientProfileTab);

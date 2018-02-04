@@ -9,10 +9,10 @@ const RouterComponent = () => {
     return (
         <Router>
             <Scene key="profileForm" inital hideNavBar="true">
-                <Scene key="newTimelineEventForm" component={NewTimelineEventForm} />
-                <Scene key="newPatientForm" component={NewPatientForm} />
                 <Scene key="nfcScanForm" component={NfcScanForm} />
-                <Scene key="patientProfileForm" component={PatientProfileForm} />               
+                <Scene key="newPatientForm" component={NewPatientForm} />  
+                <Scene key="patientProfileForm" component={PatientProfileForm} />  
+                <Scene key="newTimelineEventForm" component={NewTimelineEventForm} />             
             </Scene>
         </Router>
     );

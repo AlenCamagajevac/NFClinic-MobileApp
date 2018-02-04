@@ -1,57 +1,78 @@
 import React, { Component } from 'react';
 import { ListView, Text, View } from 'react-native';
 import { connect } from 'react-redux';
-import { ListItem, Icon, Left, Body, Right, Fab } from 'native-base';
+import { ListItem, Icon, Left, Body, Right, Fab, Spinner, Container } from 'native-base';
 import { Actions } from 'react-native-router-flux';
-import { nfcScanStarted } from '../actions';
-
-const data = [
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    'Nathaniel Clyne',
-    'Dejan Lovren',
-    'Mama Sakho',
-    'Alberto Moreno',
-    'Emre Can',
-    'Joe Allen',
-    'Phil Coutinho',
-  ];
+import { timelineEventFetchStarted } from '../actions';
 
 class PatientTimelineTab extends Component {
-    componentWillMount() {
-        const ds = new ListView.DataSource({ 
-            rowHasChanged: (r1, r2) => r1 !== r2
-         });
+    constructor(props) {
+        super(props);
+        const ds = this.getDatasource();
+        this.state = {
+            dataSource: ds.cloneWithRows([{}]),
+        };
+    }
 
-        this.dataSource = ds.cloneWithRows(data);
+    componentWillMount() {
+        this.setState({ 
+            dataSource: this.getDatasource().cloneWithRows(this.props.patientTimeline) 
+        });
+
+        if (this.props.patientModel !== null) {
+            console.log('start');
+            this.props.timelineEventFetchStarted(this.props.patientModel.id);
+        }
+    }
+
+    componentWillReceiveProps(newProps) {
+        this.setState({ 
+            dataSource: this.getDatasource().cloneWithRows(newProps.patientTimeline) 
+        });
     }
 
     onNewTimelineEventClick() {
         Actions.newTimelineEventForm();
     }
 
-    renderRow(dataItem) {
+    getDatasource() {
+        return new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    }
+
+    renderRow(timelineItem) {
         return (
             <ListItem avatar>
                 <Left>
                     <Icon name="md-arrow-round-forward" />
                 </Left>
                 <Body>
-                    <Text>{dataItem}</Text>
-                    <Text note>Pacijent se žali na bolove u trbuhu</Text>
+                    <Text>{timelineItem.name}</Text>
+                    <Text note>{timelineItem.description}</Text>
                 </Body>
                 <Right style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <Text note>12.3.2018 13:43</Text>
+                    <Text note>{timelineItem.time}</Text>
                 </Right>
             </ListItem>
         );
     }
 
     render() {
+        if (this.props.isTimelineLoading) {
+            return <Spinner />;
+        } else if (this.props.timelineGetError !== '') {
+            return (
+                <View style={{ paddingTop: 150, justifyContent: 'center', alignItems: 'center' }}>
+                    <Icon active name="md-close-circle" />
+                    <Text>Error getting timeline</Text>
+                </View>
+            );
+        }
+
         return (
-            <View>
+            <Container>
                 <ListView
                     style={{ padding: 15 }}
-                    dataSource={this.dataSource}
+                    dataSource={this.state.dataSource}
                     renderRow={this.renderRow}
                 />
 
@@ -62,15 +83,19 @@ class PatientTimelineTab extends Component {
                 >
                     <Icon name="md-folder-open" />
                 </Fab>
-          </View>
+          </Container>
         );
     }
 }
 
-const mapStateToProps = ({ nfc }) => {
-    const { isNfcScanning, nfcTag, nfcScanError } = nfc;
+const mapStateToProps = ({ patient }) => {
+    const { patientModel,
+        patientTimeline,
+        isTimelineLoading,
+        timelineGetError, 
+    } = patient;
 
-    return { isNfcScanning, nfcTag, nfcScanError };
+    return { patientModel, patientTimeline, isTimelineLoading, timelineGetError };
 };
 
-export default connect(mapStateToProps, { nfcScanStarted })(PatientTimelineTab);
+export default connect(mapStateToProps, { timelineEventFetchStarted })(PatientTimelineTab);

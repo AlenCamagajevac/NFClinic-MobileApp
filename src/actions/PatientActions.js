@@ -1,13 +1,8 @@
-import { PATIENT_ADD_BEGIN, PATIENT_ADD_ABORT } from './types';
+import { TIMELINE_EVENT_GET_BEGIN } from './types';
 
-export const patientAddStarted = () => {
+export const timelineEventFetchStarted = (patientId) => {
     return {
-        type: PATIENT_ADD_BEGIN
-    };
-};
-
-export const patientAddAborted = () => {
-    return {
-        type: PATIENT_ADD_ABORT
+        type: TIMELINE_EVENT_GET_BEGIN,
+        payload: patientId
     };
 };
