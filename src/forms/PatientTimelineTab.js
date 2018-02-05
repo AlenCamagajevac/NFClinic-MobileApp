@@ -45,7 +45,7 @@ class PatientTimelineTab extends Component {
     keyExtractor = (item, index) => item.id;
 
     renderListFooter() {
-        if (!this.props.isTimelineLoading) {
+        if (!this.props.hasNextPage) {
              return null;
         }
 

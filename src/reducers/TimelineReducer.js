@@ -13,7 +13,7 @@ const INITIAL_STATE = {
     isTimelineLoading: false,
     pageIndex: 0,
     totalPages: 0,
-    hasNextPage: false,
+    hasNextPage: true,
     hasPreviousPage: false
 };
 
