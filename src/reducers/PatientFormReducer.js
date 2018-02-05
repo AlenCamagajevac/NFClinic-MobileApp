@@ -6,7 +6,6 @@ const INITIAL_STATE = {
     email: '',
     dateOfBirth: new Date(),
     cardId: ''
-
 };
 
 export default (state = INITIAL_STATE, action) => {
