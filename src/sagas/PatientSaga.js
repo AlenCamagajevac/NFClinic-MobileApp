@@ -44,8 +44,8 @@ const fetchPatientData = (cardId) => {
         });          
 };
 
-const fetchPatientTimeline = (patientId) => {
-        return axios.get(`http://192.168.5.10:56732/api/patients/${patientId}/Timeline`).then(response => {
+const fetchPatientTimeline = ({ patientId, page }) => {
+        return axios.get(`http://192.168.5.10:56732/api/patients/${patientId}/Timeline?page=${page}`).then(response => {
                 return response.data;
         });
 };

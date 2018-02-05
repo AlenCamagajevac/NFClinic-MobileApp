@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { FlatList, View } from 'react-native';
 import { connect } from 'react-redux';
-import { ListItem, Icon, Left, Body, Right, Fab, Spinner, Container, Text, Header, Item, Input, Footer } from 'native-base';
+import { ListItem, Icon, Left, Body, Right, Fab, Spinner, 
+    Container, Text, Header, Item, Input } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import Moment from 'moment';
 import { timelineEventFetchStarted } from '../actions';
@@ -20,13 +21,13 @@ class PatientTimelineTab extends Component {
         });
 
         if (this.props.patientTimeline.length === 0 && this.props.patientModel !== null) {
-            this.props.timelineEventFetchStarted(this.props.patientModel.id);
+            this.props.timelineEventFetchStarted({ patientId: this.props.patientModel.id, page: this.props.pageIndex + 1 });
         }
     }
 
     componentWillReceiveProps(newProps) {
         this.setState({ 
-            dataSource: newProps.patientTimeline
+            dataSource: newProps.patientTimeline,
         });
     }
 
@@ -34,13 +35,42 @@ class PatientTimelineTab extends Component {
         Actions.newTimelineEventForm();
     }
 
+    onTimelineEndReached() {
+        console.log('reached');
+        if (this.props.hasNextPage) {
+            this.props.timelineEventFetchStarted({ patientId: this.props.patientModel.id, page: this.props.pageIndex + 1 });
+        }
+    }
+
     keyExtractor = (item, index) => item.id;
+
+    renderListFooter() {
+        if (!this.props.isTimelineLoading) {
+             return null;
+        }
+
+        return (
+            <View>
+                <Spinner />
+            </View>
+        );
+    }
+
+    renderListHeader() {
+        return (
+            <Header searchBar rounded>
+                <Item>
+                    <Icon name="ios-search" />
+                    <Input placeholder="Search events" />
+                    <Icon name="md-clipboard" />
+                </Item>
+            </Header>
+        );
+    }
 
     render() {
         Moment.locale('hr');
-        if (this.props.isTimelineLoading) {
-            return <Spinner />;
-        } else if (this.props.timelineGetError !== '') {
+        if (this.props.timelineGetError !== '') {
             return (
                 <View style={{ paddingTop: 150, justifyContent: 'center', alignItems: 'center' }}>
                     <Icon active name="md-close-circle" />
@@ -68,18 +98,11 @@ class PatientTimelineTab extends Component {
                             </Right>
                         </ListItem>
                     )}
-                    ListHeaderComponent={() => {
-                        return (
-                        <Header searchBar rounded>
-                            <Item>
-                                <Icon name="ios-search" />
-                                <Input placeholder="Search events" />
-                                <Icon name="md-clipboard" />
-                            </Item>
-                        </Header>
-                        );
-                    }}
+                    ListHeaderComponent={this.renderListHeader.bind(this)}
+                    ListFooterComponent={this.renderListFooter.bind(this)}
                     keyExtractor={this.keyExtractor}
+                    onEndReachedThreshold={1}
+                    onEndReached={this.onTimelineEndReached.bind(this)}
                 />
 
                 <Fab 
@@ -94,15 +117,28 @@ class PatientTimelineTab extends Component {
     }
 }
 
-const mapStateToProps = ({ patient }) => {
-    console.log('props', patient);
-    const { patientModel,
+const mapStateToProps = ({ patient, timeline }) => {
+    const { patientModel } = patient;
+    const { 
         patientTimeline,
-        isTimelineLoading,
         timelineGetError, 
-    } = patient;
+        isTimelineLoading,
+        pageIndex,
+        totalPages,
+        hasPreviousPage,
+        hasNextPage
+    } = timeline;
 
-    return { patientModel, patientTimeline, isTimelineLoading, timelineGetError };
+    return { 
+        patientModel, 
+        patientTimeline, 
+        isTimelineLoading, 
+        timelineGetError,
+        pageIndex,
+        totalPages,
+        hasPreviousPage,
+        hasNextPage    
+    };
 };
 
 export default connect(mapStateToProps, { timelineEventFetchStarted })(PatientTimelineTab);
